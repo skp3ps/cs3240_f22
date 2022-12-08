@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load bootstrap %}
+{% load static %}
+{% block body %}
+<link rel="stylesheet" href="../../static/style.css">
+<div class="container-fluid pt-3">
+  <br />
+  <div class="row align-items-start">
+    <div class="col">
+      <img src="{% static 'book.jpg' %}" class="img-responsive" style="width:80%;">
+    </div>
+    <div class="col-6">
+      <h1 class="display-3 text-center">Textbook Exchange</h1>
+    </div>
+    <div class="col">
+      <img src="{% static 'uva.jpg' %}" class="img-responsive" style="width:100%;">
+    </div>
+  </div>
+  <br />
+  <div class="container-fluid pb-3">
+    {% if user.is_authenticated %}
+    <h4 class="m-0 font-weight-bold text-center">Welcome, you are logged in as {{ user.username }}!</h4>
+    {% else %}
+    <a href="{% provider_login_url 'google' %}" class="btn accent-bg">Login With Google</a>
+    {% endif %}
+  </div>
+  <br />
+
+  <div class="row">
+
+    <div class="col-lg-6">
+      <div class="card shadow mb-4 h-100">
+        <div class="card-header py-3">
+          <h5 class="m-0 font-weight-bold text-center">Search for Available Books</h5>
+        </div>
+        <div class="card-body">
+          <p>Enter as many search filters as you'd like and click Filter to apply them!</p>
+          <form method="GET">
+
+            {{ filter.form|bootstrap }}
+            <br>
+            <input type="submit" class="btn accent-bg" value="Filter">
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+
+      <div class="card shadow mb-4 text-center" style="height:48%">
+        <div class="card-header py-3">
+          <h5 class="m-0 font-weight-bold text-center">Add Your Own Textbook</h5>
+        </div>
+        <div class="card-body">
+          <h6>You can list your own textbooks for sale here!</h6>
+          <a href="{% url 'choose_course' %}" class="btn accent-bg">Add Textbook</a>
+        </div>
+      </div>
+
+      <div class="card shadow mb-4 text-center" style="height:47%">
+        <div class="card-header py-3">
+          <h5 class="m-0 font-weight-bold text-center">Other Actions</h5>
+        </div>
+        <div class="card-body">
+          <a href="{% url 'profile' %}" class="btn accent-bg">View Your Profile</a>
+          <a href="{% url 'all_rooms' %}" class="btn accent-bg">Chat with Others</a>
+          <a href="{% url 'logout' %}" class="btn accent-bg">Logout</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <br />
+
+  <h1 class="display-5 text-center">Books For Sale</h1>
+
+  <br />
+
+  <div class="row">
+    {% if filter.qs %}
+    {% for book in filter.qs %}
+    {% if book.seller != user %}
+    <div class="col-sm-3 mb-3">
+      <div class="card border-dark text-center">
+        <!-- Write your comments here <img src="..." class="card-img-top" alt="..."> </p>-->
+        <div class="card-body">
+          <h5 class="card-title"><a href="{% url 'book_detail' book.id %}">{{ book.title }}</a></h5>
+          <h6 class="card-subtitle mb-2 text-muted">${{book.price|floatformat:2}}</h6>
+          <!-- Write your comments here <p class="card-text">Example Text.</p>-->
+          <img src="{{ book.image.url }}" class="img-responsive" style="width:100%; float:center;"/>
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Seller: <a href="{% url 'profile_detail' book.seller.id %}">{{ book.seller }}</a></li>
+            <li class="list-group-item">Course: <a href="{% url 'course_detail' book.course.id %}">{{ book.course }}</a>
+            </li>
+            <li class="list-group-item">Version: {{book.version}}</li>
+            <li class="list-group-item">Year: {{book.year}}</li>
+            <!--<li class="list-group-item">Image: <img src="{% static 'default_book_cover.jpg' %}"></li>-->
+            <!--<li class="list-group-item">Image: {{book.image}}</li>-->
+          </ul>
+          <a href="{% url 'book_detail' book.id %}" class="btn accent-bg">More Details</a>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    {% if books %}
+    <h5>There are no books matching your filters at the moment.</h5>
+    {% else %}
+    <h5>There are no books for sale at the moment.</h5>
+    {% endif %}
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block body %}
+<br />
+<div class="container-fluid pt-3">
+    <div class = "flex-container">
+        <div class = "flex-item-center"><h1 class="display-3 text-center">Textbook Exchange</h1>
+        </div>
+    </div>
+    <br />
+    <div class="row justify-content-center">
+        <div class="col-sm-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h5 class="m-0 font-weight-bold text-center text-capitalize">{{profile.username}}'s Profile</h5>
+                  </div>
+                <div class="card-body text-center">
+                    <p>Username: {{ profile.username }}</p>
+                    <p>Email: {{ profile.email }}</p>
+                    <p>Date Joined: {{ profile.date_joined }}</p>
+
+                    {% if received %}
+                        <a href="{% url 'accept_friend_request1' profile.id%}" class="btn btn-sm accent-bg">Accept Friend Request</a>
+                        <a href="{% url 'reject_request1' profile.id%}" class="btn btn-sm accent-bg">Delete Friend Request</a>
+                    {% else %}
+                        {% if are_we_friends %}
+                        <a href="{% url 'remove_friend1' profile.id %}" class="btn btn-sm accent-bg">Remove Friend</a>
+                        {% else %}
+                            {% if sent %}
+                            <a href="{% url 'remove_request1' profile.id%}" class="btn btn-sm accent-bg">Unsend Friend Request</a>
+                            {% else %}
+                                <a href="{% url 'send_friend_request' profile.id%}" class="btn btn-sm accent-bg">Send {{profile.username}} a Friend Request</a>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    <a href="{% url 'chat' profile.id %}" class="btn btn-sm accent-bg">Chat</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<hr/>
+
+<div class="container-fluid pt-3">
+    <h1 class="display-5 text-center text-capitalize">{{ profile.username }}'s Books For Sale</h1>
+    <br />
+</div>
+
+<div class="row">
+{% if profile.book_set.all %}
+    {% for book in profile.book_set.all %}
+        <div class="col-sm-3 mb-3">
+          <div class="card border-dark text-center">
+            <!--    <img src="..." class="card-img-top" alt="...">     </p>-->
+            <div class="card-body">
+              <h5 class="card-title"><a href="{% url 'book_detail' book.id %}">{{ book.title }}</a></h5>
+              <h6 class="card-subtitle mb-2 text-muted">${{book.price|floatformat:2}}</h6>
+              <img src="{{ book.image.url }}" class="img-responsive" style="width:100%; float:center;" />
+              <!--   <p class="card-text">Example Text.     </p>-->
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">Course: <a href="{% url 'course_detail' book.course.id %}">{{ book.course }}</a></li>
+                <li class="list-group-item">Version: {{book.version}}</li>
+                <li class="list-group-item">Year: {{book.year}}</li>
+                <!--    <li class="list-group-item">Image: {{book.image}}</li>      </p>-->
+              </ul>
+                  <a href="{% url 'book_detail' book.id %}" class="btn accent-bg">More Details</a>
+            </div>
+          </div>
+        </div>
+    {% endfor %}
+{% else %}
+<h3>{{profile.username}} isn't selling any books right now.</h3>
+{% endif %}
+
+
+{% endblock %}

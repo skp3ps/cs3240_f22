@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container-fluid pt-3">
+    <div class="jumbotron text-center pb-2">
+        <h1>Select Course</h1>
+    </div>
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">Course Information</h5>
+              </div>
+            <div class="card-body">
+                <p>Enter at least one filter and click Search Courses to see matching courses.</p>
+                <form method="get">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="subject">Subject:</label>
+                        </div>
+                        <div class="col">
+                            <input class="mb-1 w-100" type="text" name="subject">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="catalog_number">Catalog Number:</label>
+                        </div>
+                        <div class="col">
+                            <input class="mb-1 w-100" type="text" name="catalog_number">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="course_section">Course Section:</label>
+                        </div>
+                        <div class="col">
+                            <input class="mb-1 w-100" type="text" name="course_section">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="course_number">Course Number:</label>
+                        </div>
+                        <div class="col">
+                            <input class="mb-1 w-100" type="number" name="course_number">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="semester_code">Semester Code:</label>
+                        </div>
+                        <div class="col">
+                            <input class="mb-1 w-100" type="number" name="semester_code">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="instructor_name">Instructor Name:</label>
+                        </div>
+                        <div class="col">
+                            <input class="mb-1 w-100" type="text" name="instructor_name">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="instructor_email">Instructor Email:</label>
+                        </div>
+                        <div class="col">
+                            <input class="mb-1 w-100" type="text" name="instructor_email">
+                        </div>
+                    </div>
+                    <input type="submit" value="Search Courses" class="btn accent-bg">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">Courses</h5>
+            </div>
+            <div class="card-body">
+                {% if error_message %}
+                    {{ error_message }}
+                {% elif courses %}
+                <div class="row">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for course in courses %}
+                        <div class="col">
+                        <input type="radio" name="course" value={{ course.pk }}>
+                        <label>{{ course }}</label>
+                        </div>
+                        {% endfor %}
+                        <br>
+                        <input type="submit" value="Select Course" class="btn accent-bg">
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

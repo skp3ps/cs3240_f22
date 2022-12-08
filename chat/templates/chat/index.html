@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css" />
+<style>
+  .rounded-edges {
+    border-radius: 0.25rem;
+  }
+</style>
+</head>
+{% block body %}
+
+  <section class="section">
+    <div class="container-fluid pt-3">
+      <div class="row justify-content-center">
+        <div class="col-sm-5">
+          <div class="card shadow mb-4 text-center">
+             <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">Search for users</h5>
+              </div>
+            <div class="card-body">
+              <form method="get">
+                
+                <label for="username">Username:</label>
+                <input type="text" name="username"><br>
+                <br>
+                <input type="submit" value="Search" class="btn accent-bg">
+              </form>
+              {% if profiles %}
+                <br>
+                {% for profile in profiles %}
+                <a href="{% url 'profile_detail' profile.id %}">{{ profile.username }}</a>
+                {% endfor %}
+              {% endif %}
+              {% if error_message %}
+              <br>
+                {{ error_message }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        {% if rooms %}
+        {% for room in rooms %}
+        <div class="col-sm-3 mb-3">
+          <div class="card shadow mb-4 text-center h-100">
+             <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">{{ room.name }}</h5>
+              </div>
+            <div class="card-body">
+                <p>{{ room.description }}</p>
+                <a href="rooms/{{room.slug}}" class="btn accent-bg">Join Room</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h4>You have not started any chats. Contact a book seller or search for a user above to start chatting!</h4>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  {% endblock %}

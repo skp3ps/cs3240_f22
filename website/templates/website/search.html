@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block body %}
+<br>
+<div class="container-fluid pt-3">
+    <div class="jumbotron text-center pb-2">
+        <h3 class="display-3 text-center">Textbook Search</h3>
+        <br>
+    </div>
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">Search</h5>
+              </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <label for="key"></label>
+                    <input type="text" name="key"><br>
+                    <br>
+                    <input type="submit" value="Search" class="btn accent-bg">
+                  </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">Books</h5>
+            </div>
+            <div class="card-body">
+                {% if books %}
+                    {% for book in books %}
+                        <a href="{% url 'book_detail' book.id %}">{{ book }}</a>
+                    {% endfor %}
+                {% else %}
+                    {% if nosearch %}
+                        <h5>Enter a search term to find books.</h5>
+                    {% else %}
+                        <h5>There are no books matching your filters.</h5>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">Profiles</h5>
+            </div>
+            <div class="card-body">
+                {% if profiles %}
+                    {% for profile in profiles %}
+                        <a href="{% url 'profile_detail' profile.id %}">{{ profile.username }}</a>
+                    {% endfor %}
+                {% else %}
+                    {% if nosearch %}
+                        <h5>Enter a search term to find profiles.</h5>
+                    {% else %}
+                        <h5>There are no profiles matching your filters.</h5>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">Courses</h5>
+            </div>
+            <div class="card-body">
+                {% if courses %}
+                    {% for course in courses %}
+                        <a href="{% url 'course_detail' course.id %}">{{ course }}</a>
+                    {% endfor %}
+                {% else %}
+                    {% if nosearch %}
+                        <h5>Enter a search term to find courses.</h5>
+                    {% else %}
+                        <h5>There are no courses matching your filters.</h5>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

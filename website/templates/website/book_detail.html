@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container-fluid pt-3">
+    <div class="jumbotron text-center pb-2">
+        <h1>{{ book.title }}</h1>
+    </div>
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">Book Information</h5>
+              </div>
+            <div class="card-body">
+                <p>Title: {{ book.title }}</p>
+                <p>Price: ${{ book.price|floatformat:2 }}</p>
+                <p>Seller: <a href="{% url 'profile_detail' book.seller.id %}">{{ book.seller }}</a></p>
+                <p>Course: <a href="{% url 'course_detail' book.course.id %}">{{ book.course }}</a></p>
+                <p>Version: {{ book.version }}</p>
+                <p>Condition: {{ book.condition }}</p>
+                <p>Year: {{ book.year }}</p>
+                <p>ISBN: {{ book.isbn }}</p>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">Actions</h5>
+            </div>
+            <div class="card-body">
+                {% if user == book.seller %}
+                <a href="{% url 'edit_book' book.id %}" class="btn accent-bg">Edit Book</a>
+                <a href="{% url 'delete_book' book.id %}" class="btn accent-bg">Delete Book</a>
+                {% else %}
+                <a href="{% url 'chat' book.seller.id %}" class="btn accent-bg">Contact Seller</a>
+                {% if book in user.favorited.all %}
+                <a href="{% url 'remove_favorite1' book.id %}" class="btn accent-bg"> Favorited!</a>
+                {% else %}
+                <a href="{% url 'favorite_book' book.id %}" class="btn accent-bg">Favorite Book</a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container-fluid pt-3">
+    <div class="jumbotron text-center pb-2">
+        <h1>{{ course }}</h1>
+    </div>
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">Course Information</h5>
+              </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <p>Subject: {{ course.subject }}</p>
+                        <p>Catalog Number: {{ course.catalog_number }}</p>
+                        <p>Course Section: {{ course.course_section }}</p>
+                        <p>Semester Code: {{ course.semester_code }}</p>
+                        <p>Course Number: {{ course.course_number }}</p>
+                        <p>Description: {{ course.description }}</p>
+                        <hr>
+                        <p>Units: {{ course.units }}</p>
+                        <p>Component: {{ course.component }}</p>
+                        <p>Description: {{ course.description }}</p>
+                    </div>
+                    <div class="col">
+                        <p>Instructor: {{ course.instructor_name }}</p>
+                        <p>Instructor Email: {{ course.instructor_email }}</p>
+                        <hr>
+                        <p>Meeting Days: {{ course.meetings_days }}</p>
+                        <p>Start Time: {{ start_time}} </p>
+                        <p>End Time: {{ end_time }}</p>
+                        <p>Location: {{ course.facility_description }}</p>
+                        <hr>
+                        <p>Class Capacity: {{ course.class_capacity }}</p>
+                        <p>Wait List: {{ course.wait_list }} / {{ course.wait_cap }}</p>
+                        <p>Enrollment Available: {{ course.enrollment_available }} / {{ course.enrollment_total }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>{{ course }}'s Books for Sale</h4>
+<div class="row">
+{% if course.book_set.all %}
+    {% for book in course.book_set.all %}
+<div class="col-sm-4 mb-3">
+  <div class="card text-center h-100">
+    <!--    <img src="..." class="card-img-top" alt="...">     </p>-->
+    <div class="card-body">
+      <h5 class="card-title"><a href="{% url 'book_detail' book.id %}">{{ book.title }}</a></h5>
+      <h6 class="card-subtitle mb-2 text-muted">${{book.price}}</h6>
+      <img src="{{ book.image.url }}" class="img-responsive" style="width:100%; float:center;" />
+      <!--   <p class="card-text">Example Text.     </p>-->
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Course: <a href="{% url 'course_detail' book.course.id %}">{{ book.course }}</a></li>
+        <li class="list-group-item">ISBN: {{book.isbn}}</li>
+        <li class="list-group-item">Version: {{book.version}}</li>
+        <li class="list-group-item">Year: {{book.year}}</li>
+        <li class="list-group-item">Condition: {{book.condition}}</li>
+        <!--    <li class="list-group-item">Image: {{book.image}}</li>      </p>-->
+      </ul>
+          <a href="{% url 'book_detail' book.id %}" class="btn accent-bg">More Details</a>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% else %}
+<p>There are currently no books for sale for this class.</p>
+{% endif %}
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold">Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'add_book' course.id %}" class="btn accent-bg">Sell a Book for This Course</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
